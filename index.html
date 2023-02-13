@@ -1,66 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-      
+
     </style>
 </head>
+
 <body>
- 
-    <div style="font-size: xx-small;" id="app"></div>
+
+    <div id="app"></div>
     <script>
         let html = document.getElementById('app');
-        let infoDiv ='';
+        let infoDiv = '';
         let bilPosition = 0;
-        let events = [{name: 'squirrel', coolnessValue:5}, {name: 'konge', coolnessValue:10}, {name: 'tiger', coolnessValue:-5}];
-       let buttonPosition = 6;
-       let buttonName = '';
-       let coolnessIndicator = 100;
-        
+        let events = [{ name: 'squirrel', position: 31, source: 'squirrel.gif', coolnessValue: 20 }, { name: 'konge', position: 56, source: 'konge.gif', coolnessValue: 50 },
+        { name: 'tiger', position: 81, source: 'tiger.gif', coolnessValue: -10 }];
+        let buttonPosition = 0;
+
+        let buttonName = '';
+        let coolnessIndicator = 50;
+        let imageSrc = '';
+        let imagePosition = 0;
+        let counter = -1;
+        let newCounter = -1;
+
         view();
-        function view(){
-  
+        function view() {
 
-        infoDiv = /*html*/`
 
-            <div class="road" style="border: solid 2px black; background-color: grey; height: 200px;">
-            <img id="image" src="bilBilde.webp" style="width: 5%; position: absolute; right: ${bilPosition}%; top: 60px;">
-            ${bilPosition == 0? '' : `<button style="width: 50px; position: absolute; right: ${buttonPosition}%; top: 90px; font-size: xx-small;">${buttonName}</button>`}
-             </div><br/>
-            KullBar
-            <div class="barcontainer" style="background-color: aqua; width: 50px; height: 320px;">
-            <div class="bar" style="background-color: red;  width: 100%; height: ${coolnessIndicator}%;"></div>
-            </div>
+            infoDiv = /*html*/`
 
-        `;
+                    <div class="road" style="border: solid 2px black; background-color: grey; height: 200px;">
+                    <img id="image" src="bilBilde.webp" style="width: 5%; position: absolute; right: ${bilPosition}%; top: 60px;">
+                    ${bilPosition == 0 ? '' : `<button onclick="take(${counter})" style="width: 2%; position: absolute; right: ${buttonPosition}%; top: 90px; font-size: xx-small;">Take</button>
+                                            <button onclick="leave(${counter})" style="width: 2%; position: absolute; right: ${buttonPosition}%; top: 105px; font-size: xx-small;">Leave</button>
+                                            <img src="${imageSrc}" style="width: 3%; position: absolute; right: ${imagePosition}%; top: 60px"
 
-        html.innerHTML = infoDiv;
+                    `}
+                    </div><br/>
+
+
+                    
+                    <div class="barcontainer" style="background-color: aqua; width: 50px; height: 320px; position:fixed; top: 300px; ">
+                    <div class="bar" style="background-color: red;  width: 100%; height: ${coolnessIndicator}%;"></div>
+                    </div>
+
+
+                    `;
+
+
+
+            html.innerHTML = infoDiv;
         }
 
         var changeValues = setInterval(setValues, 1000);
         var evaluate = setInterval(evaluate, 1000);
 
         function setValues() {
-            let random = Math.floor(Math.random()*3);
-            bilPosition += (random*10);
-            bilPosition = Math.min(bilPosition, 90);
-            buttonPosition = bilPosition+6;
-            buttonName = events[random].name;
-           
-            coolnessIndicator -= events[random].coolnessValue;
-            coolnessIndicator = Math.min(100, Math.max(0, coolnessIndicator));
+            bilPosition += 25;
+            bilPosition = Math.min(bilPosition, 75);
+
+            let random = Math.floor(Math.random() * 3);
+
+            buttonPosition = bilPosition + 5;
+            newCounter++;
+            counter = Math.min((counter + 1), 2);
+            imageSrc = events[counter].source;
+            imagePosition = buttonPosition + 2;
+
+
         }
-        function evaluate(){
-            if (bilPosition==90) clearInterval(changeValues);
+        function evaluate() {
+            if (bilPosition == 25) clearInterval(changeValues);
             view();
+        }
+        function take(index) {
+            if(newCounter<3){
+            coolnessIndicator -= events[index].coolnessValue;
+            coolnessIndicator = Math.min(100, Math.max(0, coolnessIndicator));}
+
+           setValues();
+           
+            view();
+        }
+        function leave(index){
+            coolnessIndicator = Math.min(100, Math.max(0, coolnessIndicator));
+            setValues();
+            view();
+
+
         }
 
 
 
     </script>
 </body>
+
 </html>
